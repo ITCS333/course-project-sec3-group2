@@ -19,14 +19,19 @@ let users = [];
 // the HTML document is parsed before this script runs.
 
 // TODO: Select the user table body element with id="user-table-body".
+const userTableBody = document.getElementById("user-table-body");
 
 // TODO: Select the "Add User" form with id="add-user-form".
+const addUserForm = document.getElementById("add-user-form");
 
 // TODO: Select the "Change Password" form with id="password-form".
+const passwordForm = document.getElementById("password-form");
 
 // TODO: Select the search input field with id="search-input".
+const searchInput = document.getElementById("search-input");
 
 // TODO: Select all table header (th) elements inside the thead of id="user-table".
+const tableHeaders = document.querySelectorAll("#user-table thead th");
 
 // --- Functions ---
 
@@ -42,7 +47,34 @@ let users = [];
  *    - A "Delete" button with class "delete-btn" and a data-id attribute set to the user's id.
  */
 function createUserRow(user) {
-  // ... your implementation here ...
+  newRow = document.createElement("tr");
+
+  const nameCell = document.createElement("td");
+  nameCell.textContent = user.name;
+  newRow.appendChild(nameCell);
+
+  const emailCell = document.createElement("td");
+  emailCell.textContent = user.email;
+  newRow.appendChild(emailCell);
+
+  const adminCell = document.createElement("td");
+  adminCell.textContent = user.is_admin === 1 ? "Yes" : "No";
+  newRow.appendChild(adminCell);
+
+  const actionsCell = document.createElement("td");
+  const editButton = document.createElement("button");
+  editButton.className = "edit-btn";
+  editButton.setAttribute("data-id", user.id);
+  editButton.textContent = "Edit";
+  actionsCell.appendChild(editButton);
+
+  const deleteButton = document.createElement("button");
+  deleteButton.className = "delete-btn";
+  deleteButton.setAttribute("data-id", user.id);
+  deleteButton.textContent = "Delete";
+  actionsCell.appendChild(deleteButton);
+
+  newRow.appendChild(actionsCell);
 }
 
 /**
@@ -54,7 +86,11 @@ function createUserRow(user) {
  * 3. For each user, call createUserRow and append the returned <tr> to userTableBody.
  */
 function renderTable(userArray) {
-  // ... your implementation here ...
+  userTableBody.innerHTML = "";
+  userArray.forEach(user => {
+    const userRow = createUserRow(user);
+    userTableBody.appendChild(userRow);
+  });
 }
 
 /**
@@ -73,7 +109,49 @@ function renderTable(userArray) {
  * 6. On failure, show the error message returned by the API.
  */
 function handleChangePassword(event) {
-  // ... your implementation here ...
+  event.preventDefault();
+
+  const currentPassword = document.getElementById("current-password").value;
+  const newPassword = document.getElementById("new-password").value;
+  const confirmPassword = document.getElementById("confirm-password").value;
+
+  if (newPassword !== confirmPassword) {
+    alert("Passwords do not match.");
+    return;
+  }
+  if (newPassword.length < 8) {
+    alert("Password must be at least 8 characters.");
+    return;
+  }
+
+  fetch('../api/index.php?action=change_password', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      id: loggedInUserId,
+      current_password: currentPassword,
+      new_password: newPassword
+    })
+  })
+    .then(response => {
+      return response.json().then(data => {
+        if (response.ok) {
+          alert("Password updated successfully!");
+          document.getElementById("current-password").value = "";
+          document.getElementById("new-password").value = "";
+          document.getElementById("confirm-password").value = "";
+        } else {
+
+          alert(data.error || "An error occurred while updating the password.");
+        }
+      });
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("An error occurred while updating the password.");
+    });
 }
 
 /**

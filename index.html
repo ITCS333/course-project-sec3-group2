@@ -1,1 +1,84 @@
 <!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Content Management Portal</title>
+    <link rel="icon" type="image/png" href="homepageIcon.png">
+    
+    <link rel="stylesheet" href="pico.css">
+    <style>
+        nav li a:hover {
+            background-color: blue;
+        }
+        a div{
+            background-color: blue;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-align: center;
+            width: 100%;
+        }
+        main a{
+            display: flex;
+            width: 80%;
+            margin: 0 auto;
+            text-decoration: none;
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="container">
+        <header>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="src/auth/login.html">Login</a></li>
+                    <li><a href="src/admin/manage_users.html">Admin Management</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <section class="hero">
+                <h1>Welcome to the Course Website</h1>
+                <p>Your central hub for resources, assignments, and weekly updates.</p>
+            </section>
+
+            
+            <section class="tasks-grid">
+                <hr>
+                    <div class="card">
+                        <h3>Course Resources</h3>
+                        <p>Browse and download all course-related materials and files.</p>
+                        <a href="src/resources/list.html" class="btn"><div>View all Resources</div></a>
+                    </div>
+                <hr>
+                    <div class="card">
+                        <h3>Weekly Breakdown</h3>
+                        <p>Access the detailed schedule and weekly content topics.</p>
+                        <a href="src/weekly/list.html" class="btn"><div>View Schedules</div></a>
+                    </div>
+                <hr>
+                    <div class="card">
+                        <h3>Assignments</h3>
+                        <p>Check and submit your required assignments and tasks.</p>
+                        <a href="src/assignments/list.html" class="btn"><div>View the Assignments</div></a>
+                    </div>
+                <hr>
+                    <div class="card">
+                        <h3>Discussion Board</h3>
+                        <p>Engage with peers and join topic-based discussions.</p>
+                        <a href="src/discussion/board.html" class="btn"><div>View all Discussions</div></a>
+                    </div>
+                <hr>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 All Rights Reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

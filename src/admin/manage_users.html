@@ -35,7 +35,7 @@
      </header>
 
      <!-- TODO: Create a 'main' element to hold the primary content of the portal. -->
-     <main>
+     <main class="container" style="margin-bottom: 100px;">
           <!-- Section 1: Password Management -->
           <!-- TODO: Create a 'section' for the password management functionality. -->
           <section>
@@ -161,19 +161,30 @@
 
                     <!-- Subsection 2.2: User List -->
                     <!-- TODO: Add a sub-heading (e.g., 'h3') for the list of users, e.g., "Registered Users". -->
+                    <h3>Registered Users</h3>
 
                     <!-- TODO: Add a search input field.
                  - type="text"
                  - id="search-input"
                  - placeholder e.g. "Search by name or email..." -->
+                    <input type="text" id="search-input" placeholder="Search by name or email...">
 
                     <!-- TODO: Create a 'table' to display the list of users.
                  - id="user-table" -->
+                    <table id="user-table">
                     <!-- TODO: Create a 'thead' for the table headers. -->
                     <!-- TODO: Create a 'tr' (table row) inside the 'thead'. -->
                     <!-- TODO: Create 'th' (table header) cells for:
                              "Name", "Email", "Admin", "Actions"
                              Each 'th' should be clickable for sorting. -->
+                    <thead>
+                         <tr>
+                              <th>Name</th>
+                              <th>Email</th>
+                              <th>Admin</th>
+                              <th>Actions</th>
+                         </tr>
+                    </thead>
                     <!-- End of the row. -->
                     <!-- End of 'thead'. -->
 
@@ -181,11 +192,13 @@
                      - id="user-table-body"
                      The rows will be populated dynamically by manage_users.js.
                      Do NOT add any hardcoded rows here. -->
+                    <tbody id="user-table-body">
+                    </tbody>
                     <!-- End of the table. -->
+                    </table>
+                    <!-- End of the user management section. -->
           </section>
-          <!-- End of the user management section. -->
+          <!-- End of the main content area. -->
      </main>
-     <!-- End of the main content area. -->
-
 </body>
 </html>

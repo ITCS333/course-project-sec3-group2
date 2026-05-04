@@ -49,33 +49,6 @@ const tableHeaders = document.querySelectorAll("#user-table thead th");
 function createUserRow(user) {
   const newRow = document.createElement("tr");
 
-  // const nameCell = document.createElement("td");
-  // nameCell.textContent = user.name;
-  // newRow.appendChild(nameCell);
-
-  // const emailCell = document.createElement("td");
-  // emailCell.textContent = user.email;
-  // newRow.appendChild(emailCell);
-
-  // const adminCell = document.createElement("td");
-  // adminCell.textContent = user.is_admin === 1 ? "Yes" : "No";
-  // newRow.appendChild(adminCell);
-
-  // const actionsCell = document.createElement("td");
-  // const editButton = document.createElement("button");
-  // editButton.className = "edit-btn";
-  // editButton.setAttribute("data-id", user.id);
-  // editButton.textContent = "Edit";
-  // actionsCell.appendChild(editButton);
-
-  // const deleteButton = document.createElement("button");
-  // deleteButton.className = "delete-btn";
-  // deleteButton.setAttribute("data-id", user.id);
-  // deleteButton.textContent = "Delete";
-  // actionsCell.appendChild(deleteButton);
-
-  // newRow.appendChild(actionsCell);
-
     newRow.innerHTML = `
     <td>${user.name}</td>
     <td>${user.email}</td>
@@ -125,6 +98,7 @@ function handleChangePassword(event) {
   const currentPassword = document.getElementById("current-password").value;
   const newPassword = document.getElementById("new-password").value;
   const confirmPassword = document.getElementById("confirm-password").value;
+  const loggedInUserId = 1;
 
   if (newPassword !== confirmPassword) {
     alert("Passwords do not match.");
@@ -351,14 +325,13 @@ function handleSort(event) {
 async function loadUsersAndInitialize() {
   try {
     const response = await fetch('../api/index.php');
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    const result = await response.json();
+    if (result.success) {
+      users = result.data;
+      renderTable(users);
     }
-    const data = await response.json();
-    users = data.data;
-    renderTable(users);
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Failed to load users:", error);
     alert("An error occurred while loading users.");
   }
 }

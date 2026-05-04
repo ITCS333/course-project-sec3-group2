@@ -118,7 +118,7 @@ function handleChangePassword(event) {
       new_password: newPassword
     })
   })
-  .then(async response => {
+  .then(response => {
     const data = await response.json();
     if (response.ok) {
       alert("Password updated successfully!");

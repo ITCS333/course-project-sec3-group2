@@ -15,10 +15,17 @@
 // This will hold the resources loaded from the API.
 let resources = [];
 
+// --- Global Edit State ---
+let editingResourceId = null;
+
 // --- Element Selections ---
 // TODO: Select the resource form ('#resource-form').
 
+const resourceForm = document.querySelector('#resource-form');
+
 // TODO: Select the resources table body ('#resources-tbody').
+
+const resourcesTbody = document.querySelector('#resources-tbody');
 
 // --- Functions ---
 
@@ -34,7 +41,37 @@ let resources = [];
  *    - A "Delete" button with class="delete-btn" and data-id="${id}".
  */
 function createResourceRow(resource) {
-  // ... your implementation here ...
+  const tr = document.createElement('tr');
+
+  const tdTitle = document.createElement('td');
+  tdTitle.textContent = resource.title;
+  tr.appendChild(tdTitle);
+
+  const tdDescription = document.createElement('td');
+  tdDescription.textContent = resource.description;
+  tr.appendChild(tdDescription);
+
+  const tdLink = document.createElement('td');
+  tdLink.textContent = resource.link;
+  tr.appendChild(tdLink);
+
+  const tdActions = document.createElement('td');
+
+  const editBtn = document.createElement('button');
+  editBtn.className = 'edit-btn';
+  editBtn.setAttribute('data-id', resource.id);
+  editBtn.textContent = 'Edit';
+  tdActions.appendChild(editBtn);
+
+  const deleteBtn = document.createElement('button');
+  deleteBtn.className = 'delete-btn';
+  deleteBtn.setAttribute('data-id', resource.id);
+  deleteBtn.textContent = 'Delete';
+  tdActions.appendChild(deleteBtn);
+
+  tr.appendChild(tdActions);
+
+  return tr;
 }
 
 /**
@@ -46,7 +83,20 @@ function createResourceRow(resource) {
  *    append the returned <tr> to the table body.
  */
 function renderTable() {
-  // ... your implementation here ...
+  resourcesTbody.innerHTML = '';
+  resources.forEach(resource => {
+    const row = createResourceRow(resource);
+    resourcesTbody.appendChild(row);
+  });
+}
+
+/**
+ * Helper function to reset the form to add mode.
+ */
+function resetForm() {
+  resourceForm.reset();
+  editingResourceId = null;
+  document.querySelector('#add-resource').textContent = 'Add Resource';
 }
 
 /**
@@ -69,7 +119,53 @@ function renderTable() {
  * 6. Reset the form.
  */
 function handleAddResource(event) {
-  // ... your implementation here ...
+  event.preventDefault();
+
+  const title = document.querySelector('#resource-title').value.trim();
+  const description = document.querySelector('#resource-description').value.trim();
+  const link = document.querySelector('#resource-link').value.trim();
+
+  if (editingResourceId) {
+    // Update mode
+    fetch('./api/index.php', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: editingResourceId, title, description, link })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Update the resource in the array
+        const index = resources.findIndex(r => r.id == editingResourceId);
+        if (index !== -1) {
+          resources[index] = { id: editingResourceId, title, description, link };
+        }
+        renderTable();
+        resetForm();
+      } else {
+        alert('Error updating resource: ' + data.message);
+      }
+    })
+    .catch(error => console.error('Error:', error));
+  } else {
+    // Add mode
+    fetch('./api/index.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, description, link })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        resources.push({ id: data.id, title, description, link });
+        renderTable();
+        resetForm();
+      } else {
+        alert('Error adding resource: ' + data.message);
+      }
+    })
+    .catch(error => console.error('Error:', error));
+  }
 }
 
 /**
@@ -104,7 +200,34 @@ function handleAddResource(event) {
  *    restoring the submit button text to "Add Resource".
  */
 function handleTableClick(event) {
-  // ... your implementation here ...
+  const target = event.target;
+
+  if (target.classList.contains('delete-btn')) {
+    const id = target.getAttribute('data-id');
+    fetch(`./api/index.php?id=${id}`, {
+      method: 'DELETE'
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        resources = resources.filter(r => r.id != id);
+        renderTable();
+      } else {
+        alert('Error deleting resource: ' + data.message);
+      }
+    })
+    .catch(error => console.error('Error:', error));
+  } else if (target.classList.contains('edit-btn')) {
+    const id = target.getAttribute('data-id');
+    const resource = resources.find(r => r.id == id);
+    if (resource) {
+      document.querySelector('#resource-title').value = resource.title;
+      document.querySelector('#resource-description').value = resource.description;
+      document.querySelector('#resource-link').value = resource.link;
+      editingResourceId = id;
+      document.querySelector('#add-resource').textContent = 'Update Resource';
+    }
+  }
 }
 
 /**
@@ -122,7 +245,21 @@ function handleTableClick(event) {
  *    calling `handleTableClick`.
  */
 async function loadAndInitialize() {
-  // ... your implementation here ...
+  try {
+    const response = await fetch('./api/index.php');
+    const data = await response.json();
+    if (data.success) {
+      resources = data.data;
+      renderTable();
+    } else {
+      console.error('Error loading resources:', data.message);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+
+  resourceForm.addEventListener('submit', handleAddResource);
+  resourcesTbody.addEventListener('click', handleTableClick);
 }
 
 // --- Initial Page Load ---

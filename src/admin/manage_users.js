@@ -95,38 +95,41 @@ function renderTable(userArray) {
 function handleChangePassword(event) {
   event.preventDefault();
 
-  const currentPassword = document.getElementById("current-password").value;
-  const newPassword = document.getElementById("new-password").value;
-  const confirmPassword = document.getElementById("confirm-password").value;
+  const currentPasswordInput = document.getElementById("current-password");
+  const newPasswordInput = document.getElementById("new-password");
+  const confirmPasswordInput = document.getElementById("confirm-password");
+
+  const currentPasswordVal = currentPasswordInput.value;
+  const newPasswordVal = newPasswordInput.value;
+  const confirmPasswordVal = confirmPasswordInput.value;
+
   const loggedInUserId = 1;
 
-  if (newPassword !== confirmPassword) {
+  if (newPasswordVal !== confirmPasswordVal) {
     alert("Passwords do not match.");
     return;
   }
-  if (newPassword.length < 8) {
+  if (newPasswordVal.length < 8) {
     alert("Password must be at least 8 characters.");
     return;
   }
-  const clearFields = () => {
-    currentPassword.value = "";
-    newPassword.value = "";
-    confirmPassword.value = "";
-  };
+
   fetch('../api/index.php?action=change_password', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       id: loggedInUserId,
-      current_password: currentPassword,
-      new_password: newPassword
+      current_password: currentPasswordVal,
+      new_password: newPasswordVal
     })
   })
   .then(async response => {
     const data = await response.json();
     if (response.ok) {
       alert("Password updated successfully!");
-      clearFields();
+      currentPasswordInput.value = "";
+      newPasswordInput.value = "";
+      confirmPasswordInput.value = "";
     } else {
       alert(data.error || "An error occurred while updating the password.");
     }
@@ -135,7 +138,6 @@ function handleChangePassword(event) {
     console.error("Error:", error);
     alert("Connection error. Please try again.");
   });
-  clearFields();
 }
 
 /**

@@ -126,7 +126,7 @@ function handleChangePassword(event) {
     const data = await response.json();
     if (response.ok) {
       alert("Password updated successfully!");
-      
+      clearFields();
     } else {
       alert(data.error || "An error occurred while updating the password.");
     }
@@ -135,7 +135,6 @@ function handleChangePassword(event) {
     console.error("Error:", error);
     alert("Connection error. Please try again.");
   });
-  
   clearFields();
 }
 

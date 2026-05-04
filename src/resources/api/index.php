@@ -802,5 +802,4 @@ function validateRequiredFields($data, $requiredFields) {
     }
     return ['valid' => count($missing) === 0, 'missing' => $missing];
 }
-
 ?>

@@ -118,27 +118,21 @@ function handleChangePassword(event) {
       new_password: newPassword
     })
   })
-    // .then(response => {
-    //   return response.json().then(data => {
-    //     if (response.ok) {
-    //       alert("Password updated successfully!");
-    //       document.getElementById("current-password").value = "";
-    //       document.getElementById("new-password").value = "";
-    //       document.getElementById("confirm-password").value = "";
-    //     } else {
-      .then(async response => {
-        const data = await response.json();
-        if (response.ok) {
-          alert("Password updated successfully!");
-          passwordForm.reset();
-        } else {
-          alert(data.error || "An error occurred while updating the password.");
-        }
-      })
-    .catch(error => {
-      console.error("Error:", error);
-      alert("Connection error. Please try again.");
-    });
+  .then(async response => {
+    const data = await response.json();
+    if (response.ok) {
+      alert("Password updated successfully!");
+      document.getElementById("current-password").value = "";
+      document.getElementById("new-password").value = "";
+      document.getElementById("confirm-password").value = "";
+    } else {
+      alert(data.error || "An error occurred while updating the password.");
+    }
+  })
+  .catch(error => {
+    console.error("Error:", error);
+    alert("Connection error. Please try again.");
+  });
 }
 
 /**
@@ -325,24 +319,23 @@ function handleSort(event) {
 async function loadUsersAndInitialize() {
   try {
     const response = await fetch('../api/index.php');
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
     const result = await response.json();
-    if (result.success) {
-      users = result.data;
-      renderTable(users);
-    }
+    users = result.data;
+    
+    renderTable(users);
+
+    addUserForm.addEventListener("submit", handleAddUser);
+    passwordForm.addEventListener("submit", handleChangePassword);
+    userTableBody.addEventListener("click", handleTableClick);
+    searchInput.addEventListener("input", handleSearch);
+    tableHeaders.forEach(th => { th.addEventListener("click", handleSort); });
   } catch (error) {
     console.error("Failed to load users:", error);
     alert("An error occurred while loading users.");
   }
 }
-addUserForm.addEventListener("submit", handleAddUser);
-passwordForm.addEventListener("submit", handleChangePassword);
-userTableBody.addEventListener("click", handleTableClick);
-searchInput.addEventListener("input", handleSearch);
-tableHeaders.forEach(th => {
-  th.addEventListener("click", handleSort);
-});
-
 
 // --- Initial Page Load ---
 loadUsersAndInitialize();

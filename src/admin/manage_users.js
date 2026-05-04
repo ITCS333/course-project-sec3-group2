@@ -122,9 +122,9 @@ function handleChangePassword(event) {
     const data = await response.json();
     if (response.ok) {
       alert("Password updated successfully!");
-      document.getElementById("current-password").value = "";
-      document.getElementById("new-password").value = "";
-      document.getElementById("confirm-password").value = "";
+      currentPassword.value = "";
+      newPassword.value = "";
+      confirmPassword.value = "";
     } else {
       alert(data.error || "An error occurred while updating the password.");
     }

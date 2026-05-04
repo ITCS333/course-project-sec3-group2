@@ -47,34 +47,45 @@ const tableHeaders = document.querySelectorAll("#user-table thead th");
  *    - A "Delete" button with class "delete-btn" and a data-id attribute set to the user's id.
  */
 function createUserRow(user) {
-  newRow = document.createElement("tr");
+  const newRow = document.createElement("tr");
 
-  const nameCell = document.createElement("td");
-  nameCell.textContent = user.name;
-  newRow.appendChild(nameCell);
+  // const nameCell = document.createElement("td");
+  // nameCell.textContent = user.name;
+  // newRow.appendChild(nameCell);
 
-  const emailCell = document.createElement("td");
-  emailCell.textContent = user.email;
-  newRow.appendChild(emailCell);
+  // const emailCell = document.createElement("td");
+  // emailCell.textContent = user.email;
+  // newRow.appendChild(emailCell);
 
-  const adminCell = document.createElement("td");
-  adminCell.textContent = user.is_admin === 1 ? "Yes" : "No";
-  newRow.appendChild(adminCell);
+  // const adminCell = document.createElement("td");
+  // adminCell.textContent = user.is_admin === 1 ? "Yes" : "No";
+  // newRow.appendChild(adminCell);
 
-  const actionsCell = document.createElement("td");
-  const editButton = document.createElement("button");
-  editButton.className = "edit-btn";
-  editButton.setAttribute("data-id", user.id);
-  editButton.textContent = "Edit";
-  actionsCell.appendChild(editButton);
+  // const actionsCell = document.createElement("td");
+  // const editButton = document.createElement("button");
+  // editButton.className = "edit-btn";
+  // editButton.setAttribute("data-id", user.id);
+  // editButton.textContent = "Edit";
+  // actionsCell.appendChild(editButton);
 
-  const deleteButton = document.createElement("button");
-  deleteButton.className = "delete-btn";
-  deleteButton.setAttribute("data-id", user.id);
-  deleteButton.textContent = "Delete";
-  actionsCell.appendChild(deleteButton);
+  // const deleteButton = document.createElement("button");
+  // deleteButton.className = "delete-btn";
+  // deleteButton.setAttribute("data-id", user.id);
+  // deleteButton.textContent = "Delete";
+  // actionsCell.appendChild(deleteButton);
 
-  newRow.appendChild(actionsCell);
+  // newRow.appendChild(actionsCell);
+
+    newRow.innerHTML = `
+    <td>${user.name}</td>
+    <td>${user.email}</td>
+    <td>${user.is_admin === 1 ? "Yes" : "No"}</td>
+    <td>
+      <button class="edit-btn" data-id="${user.id}">Edit</button>
+      <button class="delete-btn" data-id="${user.id}">Delete</button>
+    </td>
+  `;
+  return newRow;
 }
 
 /**
@@ -126,31 +137,33 @@ function handleChangePassword(event) {
 
   fetch('../api/index.php?action=change_password', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       id: loggedInUserId,
       current_password: currentPassword,
       new_password: newPassword
     })
   })
-    .then(response => {
-      return response.json().then(data => {
+    // .then(response => {
+    //   return response.json().then(data => {
+    //     if (response.ok) {
+    //       alert("Password updated successfully!");
+    //       document.getElementById("current-password").value = "";
+    //       document.getElementById("new-password").value = "";
+    //       document.getElementById("confirm-password").value = "";
+    //     } else {
+      .then(async response => {
+        const data = await response.json();
         if (response.ok) {
           alert("Password updated successfully!");
-          document.getElementById("current-password").value = "";
-          document.getElementById("new-password").value = "";
-          document.getElementById("confirm-password").value = "";
+          passwordForm.reset();
         } else {
-
           alert(data.error || "An error occurred while updating the password.");
         }
-      });
-    })
+      })
     .catch(error => {
       console.error("Error:", error);
-      alert("An error occurred while updating the password.");
+      alert("Connection error. Please try again.");
     });
 }
 
@@ -171,7 +184,47 @@ function handleChangePassword(event) {
  * 7. On failure, show the error message returned by the API.
  */
 function handleAddUser(event) {
-  // ... your implementation here ...
+  event.preventDefault();
+
+  const name = document.getElementById("user-name").value;
+  const email = document.getElementById("user-email").value;
+  const password = document.getElementById("default-password").value;
+  const isAdmin = document.getElementById("is-admin").checked ? 1 : 0;
+
+  if (!name || !email || !password) {
+    alert("Please fill out all required fields.");
+    return;
+  }
+
+  if (password.length < 8) {
+    alert("Password must be at least 8 characters.");
+    return;
+  }
+
+  fetch('../api/index.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name,
+      email,
+      password,
+      is_admin: isAdmin,
+    })
+  })
+    .then(response => {
+      if (response.status === 201) {
+        loadUsersAndInitialize();
+        addUserForm.reset();
+      } else {
+        return response.json().then(data => {
+          alert(data.error || "An error occurred while adding the user.");
+        });
+      }
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("An error occurred while adding the user.");
+    });
 }
 
 /**
@@ -190,7 +243,31 @@ function handleAddUser(event) {
  *      and send a PUT request to '../api/index.php' with the updated fields.
  */
 function handleTableClick(event) {
-  // ... your implementation here ...
+  if (event.target.classList.contains("delete-btn")) {
+    const userId = event.target.getAttribute("data-id");
+
+    if (!confirm("Are you sure you want to delete this user?")) return;
+
+    fetch('../api/index.php?id=' + userId, { method: 'DELETE' })
+    .then(response => {
+      if (response.status === 200) {
+        users = users.filter(user => user.id !== parseInt(userId));
+        renderTable(users);
+      } else {
+        return response.json().then(data => {
+          alert(data.error || "An error occurred while deleting the user.");
+        });
+      }
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("An error occurred while deleting the user.");
+    });
+  }
+    else if (event.target.classList.contains("edit-btn")) {
+      const userId = event.target.getAttribute("data-id");
+
+    }
 }
 
 /**
@@ -205,7 +282,17 @@ function handleTableClick(event) {
  *    (This filters the client-side cache only; no extra API call is needed.)
  */
 function handleSearch(event) {
-  // ... your implementation here ...
+  const searchTerm = searchInput.value.toLowerCase();
+
+  if (!searchTerm) {
+    renderTable(users);
+    return;
+  }
+  const filteredUsers = users.filter(user => {
+    return user.name.toLowerCase().includes(searchTerm) || 
+    user.email.toLowerCase().includes(searchTerm);
+  });
+  renderTable(filteredUsers);
 }
 
 /**
@@ -226,7 +313,22 @@ function handleSearch(event) {
  * 6. Call renderTable(users) to update the view.
  */
 function handleSort(event) {
-  // ... your implementation here ...
+  const th = event.currentTarget;
+  const columnIndex = th.cellIndex;
+  const columnMap = { 0: 'name', 1: 'email', 2: 'is_admin' };
+  const sortKey = columnMap[columnIndex];
+  if (!sortKey) return;
+
+  // Toggle Logic
+  const currentDir = th.getAttribute("data-sort-dir") === "asc" ? "desc" : "asc";
+  th.setAttribute("data-sort-dir", currentDir);
+
+  users.sort((a, b) => {
+    let comparison = (sortKey === 'is_admin') ? 
+      a[sortKey] - b[sortKey] : a[sortKey].localeCompare(b[sortKey]);
+    return currentDir === "asc" ? comparison : -comparison;
+  });
+  renderTable(users);
 }
 
 /**
@@ -247,8 +349,27 @@ function handleSort(event) {
  *    - "click"  on each th in tableHeaders -> handleSort
  */
 async function loadUsersAndInitialize() {
-  // ... your implementation here ...
+  try {
+    const response = await fetch('../api/index.php');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    users = data.data;
+    renderTable(users);
+  } catch (error) {
+    console.error("Error:", error);
+    alert("An error occurred while loading users.");
+  }
 }
+addUserForm.addEventListener("submit", handleAddUser);
+passwordForm.addEventListener("submit", handleChangePassword);
+userTableBody.addEventListener("click", handleTableClick);
+searchInput.addEventListener("input", handleSearch);
+tableHeaders.forEach(th => {
+  th.addEventListener("click", handleSort);
+});
+
 
 // --- Initial Page Load ---
 loadUsersAndInitialize();

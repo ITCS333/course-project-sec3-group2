@@ -138,6 +138,9 @@ function handleChangePassword(event) {
     console.error("Error:", error);
     alert("Connection error. Please try again.");
   });
+  currentPasswordInput.value = "";
+  newPasswordInput.value = "";
+  confirmPasswordInput.value = "";
 }
 
 /**

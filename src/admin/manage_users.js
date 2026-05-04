@@ -108,7 +108,11 @@ function handleChangePassword(event) {
     alert("Password must be at least 8 characters.");
     return;
   }
-
+  const clearFields = () => {
+    currentPassword.value = "";
+    newPassword.value = "";
+    confirmPassword.value = "";
+  };
   fetch('../api/index.php?action=change_password', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -118,13 +122,11 @@ function handleChangePassword(event) {
       new_password: newPassword
     })
   })
-  .then(response => {
+  .then(async response => {
     const data = await response.json();
     if (response.ok) {
       alert("Password updated successfully!");
-      currentPassword.value = "";
-      newPassword.value = "";
-      confirmPassword.value = "";
+      clearFields();
     } else {
       alert(data.error || "An error occurred while updating the password.");
     }

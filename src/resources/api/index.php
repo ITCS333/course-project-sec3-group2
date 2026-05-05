@@ -73,7 +73,6 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
-
 // TODO: Handle preflight OPTIONS request
 // If the request method is OPTIONS, return 200 status and exit
 

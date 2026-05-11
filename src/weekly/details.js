@@ -20,7 +20,8 @@ function renderWeekDetails(week) {
     weekDescription.textContent = week.description;
 
     weekLinksList.innerHTML = '';
-    week.links.forEach(url => {
+    
+    (week.links || []).forEach(url => {
         const li = document.createElement('li');
         const a  = document.createElement('a');
         a.href        = url;
@@ -32,16 +33,12 @@ function renderWeekDetails(week) {
 
 function createCommentArticle(comment) {
     const article = document.createElement('article');
-
     const p = document.createElement('p');
     p.textContent = comment.text;
-
     const footer = document.createElement('footer');
     footer.textContent = 'Posted by: ' + comment.author;
-
     article.appendChild(p);
     article.appendChild(footer);
-
     return article;
 }
 
@@ -54,10 +51,8 @@ function renderComments() {
 
 async function handleAddComment(event) {
     event.preventDefault();
-
     const commentText = newCommentInput.value.trim();
     if (!commentText) return;
-
     const response = await fetch('./api/index.php?action=comment', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -67,9 +62,7 @@ async function handleAddComment(event) {
             text:    commentText
         })
     });
-
     const result = await response.json();
-
     if (result.success) {
         currentComments.push(result.data);
         renderComments();
@@ -81,22 +74,17 @@ async function handleAddComment(event) {
 
 async function initializePage() {
     currentWeekId = getWeekIdFromURL();
-
     if (!currentWeekId) {
         weekTitle.textContent = 'Week not found.';
         return;
     }
-
     const [weekResponse, commentsResponse] = await Promise.all([
         fetch(`./api/index.php?id=${currentWeekId}`),
         fetch(`./api/index.php?action=comments&week_id=${currentWeekId}`)
     ]);
-
     const weekResult     = await weekResponse.json();
     const commentsResult = await commentsResponse.json();
-
     currentComments = commentsResult.success ? commentsResult.data : [];
-
     if (weekResult.success) {
         renderWeekDetails(weekResult.data);
         renderComments();

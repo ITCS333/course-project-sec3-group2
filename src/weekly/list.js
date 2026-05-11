@@ -1,7 +1,6 @@
-// --- Element Selections ---
-const weekListSection = document.querySelector('#week-list-section');
-
-// --- Functions ---
+const weekListSection = typeof document !== 'undefined'
+    ? document.querySelector('#week-list-section')
+    : null;
 
 function createWeekArticle(week) {
     const article = document.createElement('article');
@@ -38,5 +37,8 @@ async function loadWeeks() {
     });
 }
 
-// --- Initial Page Load ---
-loadWeeks();
+if (typeof module === 'undefined') {
+    loadWeeks();
+}
+
+module.exports = { createWeekArticle, loadWeeks };

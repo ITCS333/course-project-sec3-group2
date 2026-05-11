@@ -1,7 +1,7 @@
 let weeks = [];
 
-const weekForm  = document.querySelector('#week-form');
-const weekTbody = document.querySelector('#weeks-tbody');
+const weekForm  = typeof document !== 'undefined' ? document.querySelector('#week-form')   : null;
+const weekTbody = typeof document !== 'undefined' ? document.querySelector('#weeks-tbody') : null;
 
 function createWeekRow(week) {
     const tr = document.createElement('tr');
@@ -18,9 +18,9 @@ function createWeekRow(week) {
     const tdActions = document.createElement('td');
 
     const editBtn = document.createElement('button');
-    editBtn.textContent  = 'Edit';
-    editBtn.className    = 'edit-btn';
-    editBtn.dataset.id   = week.id;
+    editBtn.textContent = 'Edit';
+    editBtn.className   = 'edit-btn';
+    editBtn.dataset.id  = week.id;
 
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = 'Delete';
@@ -152,4 +152,15 @@ async function loadAndInitialize() {
     weekTbody.addEventListener('click', handleTableClick);
 }
 
-loadAndInitialize();
+if (typeof module === 'undefined') {
+    loadAndInitialize();
+}
+
+module.exports = {
+    createWeekRow,
+    renderTable,
+    handleAddWeek,
+    handleUpdateWeek,
+    handleTableClick,
+    loadAndInitialize
+};

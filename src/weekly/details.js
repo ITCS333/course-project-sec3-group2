@@ -1,17 +1,13 @@
-// --- Global Data Store ---
 let currentWeekId   = null;
 let currentComments = [];
 
-// --- Element Selections ---
-const weekTitle       = document.querySelector('#week-title');
-const weekStartDate   = document.querySelector('#week-start-date');
-const weekDescription = document.querySelector('#week-description');
-const weekLinksList   = document.querySelector('#week-links-list');
-const commentList     = document.querySelector('#comment-list');
-const commentForm     = document.querySelector('#comment-form');
-const newCommentInput = document.querySelector('#new-comment');
-
-// --- Functions ---
+const weekTitle       = typeof document !== 'undefined' ? document.querySelector('#week-title')       : null;
+const weekStartDate   = typeof document !== 'undefined' ? document.querySelector('#week-start-date')   : null;
+const weekDescription = typeof document !== 'undefined' ? document.querySelector('#week-description')  : null;
+const weekLinksList   = typeof document !== 'undefined' ? document.querySelector('#week-links-list')   : null;
+const commentList     = typeof document !== 'undefined' ? document.querySelector('#comment-list')      : null;
+const commentForm     = typeof document !== 'undefined' ? document.querySelector('#comment-form')      : null;
+const newCommentInput = typeof document !== 'undefined' ? document.querySelector('#new-comment')       : null;
 
 function getWeekIdFromURL() {
     const params = new URLSearchParams(window.location.search);
@@ -110,5 +106,15 @@ async function initializePage() {
     }
 }
 
-// --- Initial Page Load ---
-initializePage();
+if (typeof module === 'undefined') {
+    initializePage();
+}
+
+module.exports = {
+    getWeekIdFromURL,
+    renderWeekDetails,
+    createCommentArticle,
+    renderComments,
+    handleAddComment,
+    initializePage
+};

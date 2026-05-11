@@ -18,9 +18,7 @@ function renderWeekDetails(week) {
     weekTitle.textContent       = week.title;
     weekStartDate.textContent   = 'Starts on: ' + week.start_date;
     weekDescription.textContent = week.description;
-
     weekLinksList.innerHTML = '';
-    
     (week.links || []).forEach(url => {
         const li = document.createElement('li');
         const a  = document.createElement('a');
@@ -96,13 +94,13 @@ async function initializePage() {
 
 if (typeof module === 'undefined') {
     initializePage();
+} else {
+    module.exports = {
+        getWeekIdFromURL,
+        renderWeekDetails,
+        createCommentArticle,
+        renderComments,
+        handleAddComment,
+        initializePage
+    };
 }
-
-module.exports = {
-    getWeekIdFromURL,
-    renderWeekDetails,
-    createCommentArticle,
-    renderComments,
-    handleAddComment,
-    initializePage
-};

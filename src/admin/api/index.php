@@ -100,15 +100,15 @@ function getUsers($db) {
     //       Do NOT select the password column.
     $sql = "SELECT id, name, email, is_admin, created_at FROM users";
     $params = [];
+    $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
-    $searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';
 
     // TODO: If the 'search' query parameter is present, append a WHERE clause:
     //       WHERE name LIKE :search OR email LIKE :search
     //       Wrap the search term with '%' wildcards when binding.
-    if ($searchTerm !== '') {
+    if ($search !== '') {
         $sql .= " WHERE LOWER(name) LIKE :search OR LOWER(email) LIKE :search";
-        $params['search'] = "%" . strtolower($searchTerm) . "%";
+        $params['search'] = "%" . strtolower($search) . "%";
         }
     // TODO: If the 'sort' query parameter is present and is one of the allowed
     //       fields (name, email, is_admin), append an ORDER BY clause.

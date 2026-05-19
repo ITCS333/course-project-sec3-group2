@@ -100,23 +100,25 @@ function getUsers($db) {
     //       Do NOT select the password column.
     $sql = "SELECT id, name, email, is_admin, created_at FROM users";
     $params = [];
-    $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
 
     // TODO: If the 'search' query parameter is present, append a WHERE clause:
     //       WHERE name LIKE :search OR email LIKE :search
     //       Wrap the search term with '%' wildcards when binding.
-    if ($search !== '') {
-        $sql .= " WHERE LOWER(name) LIKE :search OR LOWER(email) LIKE :search";
-        $params['search'] = "%" . strtolower($search) . "%";
-        }
+    if (isset($_GET['search']) && $_GET['search'] !== '') {
+        $search = trim($_GET['search']);
+        $sql .= " WHERE name LIKE :search OR email LIKE :search";
+        $params[':search'] = "%" . $search . "%";
+    }
     // TODO: If the 'sort' query parameter is present and is one of the allowed
     //       fields (name, email, is_admin), append an ORDER BY clause.
     //       If 'order' is 'desc', use DESC; otherwise default to ASC.
     $allowedSort = ['name', 'email', 'is_admin'];
-    $sort = $_GET['sort'] ?? 'name';
-    $order = strtolower($_GET['order'] ?? 'asc') === 'desc' ? 'DESC' : 'ASC';
-
+    if (isset($_GET['sort']) && in_array($_GET['sort'], $allowedSort)) {
+        $sort = $_GET['sort'];
+        $order = (isset($_GET['order']) && strtolower($_GET['order']) === 'desc') ? 'DESC' : 'ASC';
+        $sql .= " ORDER BY $sort $order";
+    }
     if (in_array($sort, $allowedSort)) {
         $sql .= " ORDER BY $sort $order";
     }
@@ -126,7 +128,7 @@ function getUsers($db) {
     $stmt->execute($params);
 
     // TODO: Fetch all rows as an associative array.
-    $users = $stmt->fetchAll();
+    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // TODO: Call sendResponse() with the array and HTTP status 200.
     sendResponse($users, 200);

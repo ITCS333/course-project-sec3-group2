@@ -326,7 +326,7 @@ function handleSort(event) {
  */
 async function loadUsersAndInitialize() {
   try {
-    const response = await fetch('../api/index.php');
+    const response = await fetch('./api/index.php');
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
     const result = await response.json();

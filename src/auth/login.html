@@ -24,13 +24,26 @@
      <link rel="icon" type="image/png" href="../../pagesIcons/loginIcon.png">
     <!-- TODO: Link to a CSS file or a CSS framework like PicoCSS or Bootstrap to style the page. You can use a CDN link. -->
      <link rel="stylesheet" href="../../src/common/styles.css">     
-
+     <style>
+          nav li a:hover {
+               background-color: rgb(0, 50, 255);
+          }
+    </style>
 </head>
 <body style="align-content: center;"> <!-- TODO: Add any styling to the 'body' tag to center the login form on the page. -->
 
     <!-- This will be the main content area of the page. -->
     <!-- TODO: Use the 'main' element to contain the login form, as it represents the primary content of the document. -->
      <main class="container">
+          <header>
+               <nav>
+                    <ul>
+                         <li><a href="../../index.html">Home</a></li>
+                         <li><a href="">Login</a></li>
+                         <li><a href="../admin/manage_users.html">Admin Management</a></li>
+                    </ul>
+               </nav>
+          </header>
           <!-- This 'section' groups the related content of the login form. -->
           <!-- TODO: Create a 'section' element to act as the login card. -->
           <section>

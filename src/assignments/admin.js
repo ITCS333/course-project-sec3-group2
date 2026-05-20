@@ -140,5 +140,4 @@ async function loadAndInitialize() {
   assignmentsTbody.addEventListener('click', handleTableClick);
 }
 
-// --- Initial Page Load ---
 loadAndInitialize();

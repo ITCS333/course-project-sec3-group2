@@ -1,72 +1,50 @@
-<!--
-  Requirement: Create the Admin View for Assignments
 
-  Instructions:
-  Fill in the HTML elements as described in the comments.
-  This page allows the teacher (admin) to perform full CRUD operations
-  on course assignments.
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- TODO: Add the <meta> tag for character encoding (UTF-8). -->
+   
   <meta charset="UTF-8">
-
-    <!-- TODO: Add the responsive viewport <meta> tag
-         (width=device-width, initial-scale=1.0). -->
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
-    <!-- TODO: Add a <title>, e.g., "Manage Assignments". -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <title>Manage Assignments</title>
-    <!-- TODO: Link to your CSS framework or stylesheet. -->
+
     <link rel="stylesheet" href="styles.css">
-    <!-- Required: link admin.js with defer. -->
     <script src="admin.js" defer></script>
 </head>
+  
 <body>
-
-    <!-- TODO: Create a <header> containing an <h1> "Manage Assignments". -->
     <header>
         <h1>Manage Assignments</h1>
     </header>
-    <!-- TODO: Create the <main> content area. -->
+   
     <main>
-        <!-- ============================================================
-             Section 1: Add / Edit Assignment Form
-             ============================================================ -->
         <section>
             <h2>Add a New Assignment</h2>
             <form id="assignment-form" action="#">
                 <fieldset>
                     <legend>Assignment Details</legend>
 
-                    <!-- Title -->
+                   
                     <label for="assignment-title">Title:</label>
                     <input id="assignment-title" type="text" required>
 
-                    <!-- Description -->
+                  
                     <label for="assignment-description">Description:</label>
                     <textarea id="assignment-description" rows="5" required></textarea>
 
-                    <!-- Due Date -->
+                    
                     <label for="assignment-due-date">Due Date:</label>
                     <input id="assignment-due-date" type="date" required>
 
-                    <!-- Files -->
+                    
                     <label for="assignment-files">Attached File URLs (one per line):</label>
                     <textarea id="assignment-files" rows="3"></textarea>
 
-                    <!-- Submit Button -->
+                    
                     <button id="add-assignment" type="submit">Add Assignment</button>
                 </fieldset>
             </form>
         </section>
-
-
-        <!-- ============================================================
-             Section 2: Existing Assignments Table
-             ============================================================ -->
+      
         <section>
             <h2>Current Assignments</h2>
             <table id="assignments-table">
@@ -79,11 +57,10 @@
                     </tr>
                 </thead>
                 <tbody id="assignments-tbody">
-                    <!-- Rows injected by admin.js -->
+                    
                 </tbody>
             </table>
         </section>
-    <!-- End of <main> -->
        </main>
 </body>
 </html>

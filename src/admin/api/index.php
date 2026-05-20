@@ -113,11 +113,12 @@ function getUsers($db) {
     //       fields (name, email, is_admin), append an ORDER BY clause.
     //       If 'order' is 'desc', use DESC; otherwise default to ASC.
     $allowedSort = ['name', 'email', 'is_admin'];
-    if (isset($_GET['sort']) && in_array($_GET['sort'], $allowedSort)) {
-        $sort = $_GET['sort'];
-        $order = (isset($_GET['order']) && strtolower($_GET['order']) === 'desc') ? 'DESC' : 'ASC';
-        $sql .= " ORDER BY $sort $order";
-    }
+
+    $sort = $_GET['sort'] ?? 'name';
+    $order = (isset($_GET['order']) && strtolower($_GET['order']) === 'desc')
+        ? 'DESC'
+        : 'ASC';
+
     if (in_array($sort, $allowedSort)) {
         $sql .= " ORDER BY $sort $order";
     }

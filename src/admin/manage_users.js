@@ -114,7 +114,7 @@ function handleChangePassword(event) {
     return;
   }
 
-  fetch('../api/index.php?action=change_password', {
+  fetch('./api/index.php?action=change_password', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -177,7 +177,7 @@ function handleAddUser(event) {
     return;
   }
 
-  fetch('../api/index.php', {
+  fetch('./api/index.php', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -224,7 +224,7 @@ function handleTableClick(event) {
 
     if (!confirm("Are you sure you want to delete this user?")) return;
 
-    fetch('../api/index.php?id=' + userId, { method: 'DELETE' })
+    fetch('./api/index.php?id=' + userId, { method: 'DELETE' })
     .then(response => {
       if (response.status === 200) {
         users = users.filter(user => user.id !== parseInt(userId));
